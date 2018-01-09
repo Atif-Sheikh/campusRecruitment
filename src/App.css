@@ -1,0 +1,26 @@
+.App {
+  text-align: center;
+}
+
+
+/*------------------------------ SignIn CSS --------------------------------*/
+.wrap{
+  width: 400px;
+  margin: 0 auto;
+  margin-top: 50px;
+  padding-bottom: 10px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;  
+}
+.sweetLoading{
+  margin-Left: 20px;
+  width: 100%;
+}
+/* -------------------------------- END ------------------------------------ */
+
+/* ---------------------------- Home CSS ---------------------------------- */
+.closeTag:hover{
+  background: rgba(0,0,0,0.1);
+  border-radius: 50px;
+}
+/* -------------------------------- END ----------------------------------- */
