@@ -27,7 +27,7 @@ class SignupForm extends Component{
     this.setState({signInType: value});
   };
   onChangeEmail(e){
-    console.log(e.target.value);
+    // console.log(e.target.value);
     this.setState({
       email: e.target.value,
       error: '',
@@ -40,7 +40,7 @@ class SignupForm extends Component{
     });
   };
   onChangePassword(e){
-    console.log(e.target.value);    
+    // console.log(e.target.value);    
     this.setState({
       password: e.target.value,
       error: '',      

@@ -82,7 +82,7 @@ class Home extends Component {
                     >
                     <div>
                         <h2 style={styles.headline}>Student Info</h2>
-                        <StudentInfo />
+                        <StudentInfo signInUserUID={this.state.signInUserUID} signInType={this.state.signInType} />
                     </div>
                     <div style={styles.slide}>
                         slide n°2

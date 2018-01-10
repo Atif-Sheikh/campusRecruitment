@@ -10,26 +10,70 @@ class StudentInfo extends Component {
         super();
         this.state = {
             displayName: '',
+            email: '',
             isEdit: false,
             currentUID: '',
-            skills: [],
-            colification: '',
-        }
+            skills: '',
+            qualification: '',
+        };
+    };
+    changeName = (e) => {
+        this.setState({
+            displayName: e.target.value,
+        });
+    };
+    changeSkills = (e) => {
+        // console.log(e.target.value);
+        this.setState({
+            skills: e.target.value,
+        });
+    };
+    changeQualification = (e) => {
+        // console.log(e.target.value);
+        this.setState({
+            qualification: e.target.value,
+        });
+    };
+    submitForm = (e) => {
+        e.preventDefault();
+        // console.log(this.props.signInUserUID, ':UID');
+        let UID = this.props.signInUserUID;
+        let signInType = this.props.signInType;        
+        const { displayName, skills, qualification, email } = this.state;
+        firebase.database().ref(`campus/students/${UID}`).set({displayName, email, skills, qualification, signInType});
+        this.setState({
+            isEdit: !this.state.isEdit,
+        });
+    };
+    onToggle = () => {
+        this.setState({
+            isEdit: !this.state.isEdit,
+        });
     };
     componentDidMount(){
         let currentUID = '';
         let displayName = '';
+        let email = '';
+        let qualification = '';
+        let skills = '';
         firebase.auth().onAuthStateChanged((user) => {
             if(user){
-                currentUID = user.uid
+                currentUID = user.uid;
+                email = user.email;
+                // console.log('email:', user.email);
             }
             firebase.database().ref(`campus/students/${currentUID}`).on('value', snap => {
                 // console.log(snap.val());
                 let value = Object.values(snap.val());
                 displayName = value[0];
+                qualification = value[2];
+                skills = value[4];
             this.setState({
                 currentUID,
                 displayName,
+                email,
+                skills,
+                qualification,
                 });
             });
         });
@@ -39,19 +83,21 @@ class StudentInfo extends Component {
             <div>
                 <Paper style={style} zDepth={5}>
                     {
-                        this.state.isEdit ? <div><TextField hintText="Hint Text" floatingLabelText="Name" />
+                        this.state.isEdit ? <div><form onSubmit={this.submitForm}><TextField onChange={this.changeName} defaultValue={this.state.displayName} floatingLabelText="Name" />
                         <br />
-                        <TextField hintText="Hint Text" floatingLabelText="Qualification" />                    
+                        <TextField onChange={this.changeQualification} hintText="Hint Text" defaultValue={this.state.qualification} floatingLabelText="Qualification" />                    
                             <br />
-                        <TextField hintText="Hint Text" floatingLabelText="Skills" />                    
+                        <TextField onChange={this.changeSkills} hintText="Hint Text" defaultValue={this.state.skills} floatingLabelText="Skills" />                    
                             <br />
-                        <RaisedButton label="Update Info" primary={true} /></div> : <div>
+                        <RaisedButton type='submit' label="Update Details" style={{margin: '5px'}} primary={true} />
+                        <RaisedButton onClick={this.onToggle} label="Cancel" style={{margin: '5px'}} primary={true}/>
+                        </form></div> : <div>
                         <List>
-                            <ListItem primaryText={this.state.displayName} >Name:</ListItem>
-                            <ListItem primaryText="Eric Hoffman" />
-                            <ListItem primaryText="James Anderson" />
-                            <ListItem primaryText="Kerem Suer" />
+                            <ListItem style={{fontSize: '20px', textAlign: 'left', marginLeft: '50px', marginTop: '20px'}} primaryText={`Name: ${this.state.displayName}`} />
+                            <ListItem style={{fontSize: '20px', textAlign: 'left', marginLeft: '50px'}} primaryText={`Skills: ${this.state.skills}`} />
+                            <ListItem style={{fontSize: '20px', textAlign: 'left', marginLeft: '50px'}} primaryText={`Qualification: ${this.state.qualification}`} />                            
                         </List>
+                        <RaisedButton onClick={this.onToggle} label="Update Info" primary={true} />
                         </div>
                     }
                 </Paper>

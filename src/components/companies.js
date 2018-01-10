@@ -28,7 +28,7 @@ class Companies extends Component{
                 <List>
                     {
                         this.state.companies.map((company, index) => {
-                            return <ListItem style={{fontSize: '30px'}} key={index} primaryText={`${index+1}: Company Name : ${ company.displayName} Email: ${company.email}`} />
+                            return <ListItem style={{fontSize: '30px', float: 'left', marginLeft: '100px', marginTop: '20px'}} key={index} primaryText={`${index+1}: Company Name : ${ company.displayName} Email: ${company.email}`} />
                         })
                     }
                     {/* <ListItem primaryText="Inbox" />
