@@ -72,7 +72,7 @@ class Home extends Component {
                     value={this.state.slideIndex}
                     >
                     <Tab label="Post Job" value={0} />
-                    <Tab label="Posted Jobs" value={1} />
+                    <Tab label="Jobs" value={1} />
                     <Tab label="Students" value={2} />
                     </Tabs>
                     <SwipeableViews

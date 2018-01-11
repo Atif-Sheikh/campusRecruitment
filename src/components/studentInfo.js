@@ -94,6 +94,7 @@ class StudentInfo extends Component {
                         </form></div> : <div>
                         <List>
                             <ListItem style={{fontSize: '20px', textAlign: 'left', marginLeft: '50px', marginTop: '20px'}} primaryText={`Name: ${this.state.displayName}`} />
+                            <ListItem style={{fontSize: '20px', textAlign: 'left', marginLeft: '50px'}} primaryText={`Contact: ${this.state.email}`} />                            
                             <ListItem style={{fontSize: '20px', textAlign: 'left', marginLeft: '50px'}} primaryText={`Skills: ${this.state.skills}`} />
                             <ListItem style={{fontSize: '20px', textAlign: 'left', marginLeft: '50px'}} primaryText={`Qualification: ${this.state.qualification}`} />                            
                         </List>
@@ -107,8 +108,9 @@ class StudentInfo extends Component {
 };
 
 const style = {
-    height: 500,
-    width: 500,
+    height: 400,
+    width: 400,
+    padding: 10,
     margin: 20,
     textAlign: 'center',
     display: 'inline-block',

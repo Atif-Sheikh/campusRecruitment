@@ -8,15 +8,15 @@ class PostJob extends Component {
         return(
             <div>
                 <Paper style={style} zDepth={3}>
-                    <TextField hintText='...' floatingLabelText="Job title" />
+                    <TextField floatingLabelText="Job title" />
                         <br />
-                    <TextField hintText="Hint Text" floatingLabelText="Job Type" />
+                    <TextField floatingLabelText="Job Type" />
                         <br />
-                    <TextField hintText="Hint Text" floatingLabelText="Required Qualification" />
+                    <TextField floatingLabelText="Required Qualification" />
                         <br />
-                    <TextField hintText="Hint Text" floatingLabelText="Required Experience" />
+                    <TextField floatingLabelText="Required Experience" />
                         <br />
-                    <TextField hintText="Hint Text" floatingLabelText="Salary" />
+                    <TextField defaultValue='20000' type='number' hintText="Hint Text" floatingLabelText="Salary" />
                         <br />            
                     <RaisedButton style={{margin: '20px'}} label="Post Job" primary={true} />        
                 </Paper>

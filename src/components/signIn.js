@@ -90,12 +90,13 @@ class SignIn extends Component {
                 hintText="Enter Email"
                 floatingLabelText="Email address"
                 type="text"
+                defaultValue="kashif@gmail.com"
                 onChange={this.onChangeEmail.bind(this)}
             /><br />  
             <TextField
                 hintText="Enter Password"
                 floatingLabelText="Password"
-                type="password"            
+                type="password"
                 onChange={this.onChangePassword.bind(this)}
             />
             <p style={{color: 'red'}}>{ this.state.error }</p>
