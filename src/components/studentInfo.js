@@ -40,10 +40,15 @@ class StudentInfo extends Component {
         let UID = this.props.signInUserUID;
         let signInType = this.props.signInType;        
         const { displayName, skills, qualification, email } = this.state;
-        firebase.database().ref(`campus/students/${UID}`).set({displayName, email, skills, qualification, signInType});
-        this.setState({
-            isEdit: !this.state.isEdit,
-        });
+        if(displayName !== '' && skills !== '' && qualification !== ''){
+            firebase.database().ref(`campus/students/${UID}`).set({displayName, email, skills, qualification, signInType});
+            this.setState({
+                isEdit: !this.state.isEdit,
+            });
+            alert('successfully updated!');
+        }else{
+            alert('please Enter all fields!');
+        }
     };
     onToggle = () => {
         this.setState({

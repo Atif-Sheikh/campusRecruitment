@@ -5,14 +5,15 @@ import Paper from 'material-ui/Paper';
 import '../App.css';
 import logo from './images/best.jpg';
 import { NavLink } from 'react-router-dom';
-import { BarLoader } from 'react-spinners';
+import LinearProgress from 'material-ui/LinearProgress';
 import * as firebase from 'firebase';
+import image from './images/abc.jpg';
 
 class SignIn extends Component {
   constructor(){
     super();
     this.state = {
-      email: '',
+      email: 'kashif@gmail.com',
       password: '',
       error: '',
       loading: false,
@@ -79,7 +80,7 @@ class SignIn extends Component {
   };
   render(){    
     return(
-      <div>
+      <div style={styles.background}>
         <Paper className='wrap' zDepth={4} rounded={false}>
         <img alt='' style={{width: '100%', height: '150px', borderTopLeftRadius: '5px', borderTopRightRadius: '5px'}} src={logo} />  
         <h1 className='heading'>Campus recuirtment</h1>
@@ -90,7 +91,7 @@ class SignIn extends Component {
                 hintText="Enter Email"
                 floatingLabelText="Email address"
                 type="text"
-                defaultValue="kashif@gmail.com"
+                defaultValue={this.state.email}
                 onChange={this.onChangeEmail.bind(this)}
             /><br />  
             <TextField
@@ -101,10 +102,10 @@ class SignIn extends Component {
             />
             <p style={{color: 'red'}}>{ this.state.error }</p>
             {
-                this.state.loading ? <div style={{display: 'flex', justifyContent: 'center'}} className='sweetLoading'><BarLoader
-                color={'#123abc'}
-                size={20} 
-            /></div> : <RaisedButton label="Submit" type='submit' to='/home' primary={true} style={{margin: '10'}} /> 
+                this.state.loading ? <LinearProgress
+                mode='indeterminate'
+                style={{width: '100%', margin: '10 auto'}}
+            /> : <RaisedButton label="Submit" type='submit' to='/home' primary={true} style={{margin: '10'}} /> 
             }
             <p><NavLink to='/signup' style={{color: '#123abc', textDecoration: 'none', fontWeight: 'bold'}}>don't have account ?</NavLink></p>
             </form>
@@ -113,6 +114,13 @@ class SignIn extends Component {
     </div>
     );
   }
-}
+};
+const styles = {
+      background: {
+      backgroundImage: `url(${image})`,
+      backgroundSize: 'cover',
+      height: '1000px',
+    },
+};
 
 export default SignIn;

@@ -4,11 +4,12 @@ import RaisedButton from 'material-ui/RaisedButton';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import Paper from 'material-ui/Paper';
-import { DotLoader } from 'react-spinners';
+import LinearProgress from 'material-ui/LinearProgress';
 import '../App.css';
 import logo from './images/best.jpg';
 import * as firebase from 'firebase';
 import { NavLink } from 'react-router-dom';
+import image from './images/abc.jpg';
 
 class SignupForm extends Component{
   constructor(){
@@ -85,7 +86,8 @@ class SignupForm extends Component{
   };
   render(){
     return(
-      <Paper className='wrap' zDepth={4} rounded={false}>  
+      <div style={styles.background}>
+        <Paper className='wrap' zDepth={4} rounded={false}>  
         <img alt='' style={{width: '100%', height: '150px', borderTopLeftRadius: '5px', borderTopRightRadius: '5px'}} src={logo} />  
         <div className='signupForm'>
             <Paper zDepth={3} rounded={true}></Paper>
@@ -117,12 +119,10 @@ class SignupForm extends Component{
                 onChange={this.onChangePassword.bind(this)}      
             /><p style={{color: 'red', margin: '2px'}}>{ this.state.error }</p>
                 {
-                    this.state.loading ? <DotLoader
-                    color={'#123abc'}
-                    size={20} 
-                    style={{display: 'flex', justifyContent: 'center'}}
-                    loading={this.state.loading} 
-                    /> : <RaisedButton label="Create Account!" type='submit' primary={true} style={{margin: '10', fontWeight: 'bold'}} /> 
+                    this.state.loading ? <LinearProgress
+                    mode='indeterminate'
+                    style={{width: '100%', margin: '10 auto'}}
+                /> : <RaisedButton label="Create Account!" type='submit' primary={true} style={{margin: '10', fontWeight: 'bold'}} /> 
                 }
             </form>
             <p><NavLink to='/' style={{color: '#123abc', textDecoration: 'none', fontWeight: 'bold'}}>
@@ -130,8 +130,16 @@ class SignupForm extends Component{
             </NavLink></p>        
         </div>
       </Paper>
+      </div>
     );
   }
-}
+};
+const styles = {
+    background: {
+    backgroundImage: `url(${image})`,
+    backgroundSize: 'cover',
+    height: '1000px',
+  },
+};
 
 export default SignupForm;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AppBar from 'material-ui/AppBar';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import MenuItem from 'material-ui/MenuItem';
 import Drawer from 'material-ui/Drawer';
 import * as firebase from 'firebase';
@@ -9,13 +9,15 @@ import SwipeableViews from 'react-swipeable-views';
 import RaisedButton from 'material-ui/RaisedButton';
 import StudentsList from './studentsList';
 import PostJob from './postJob';
+import Jobs from './jobs';
 import '../App.css';
 
-class Home extends Component {
+class CompanyHome extends Component {
     constructor(){
     super();
         this.state = {
             open: false,
+            email: '',
             signInUserUID: '',
             signInType: '',
             displayName: '',
@@ -42,29 +44,31 @@ class Home extends Component {
     componentDidMount(){
         let signInType = '';
         let displayName = '';
+        let email = '';
         firebase.auth().onAuthStateChanged((user) => {
             if(user){
-                // console.log(user.uid);
-                this.setState({signInUserUID: user.uid});
+                email = user.email;
+                this.setState({signInUserUID: user.uid, email});
+                firebase.database().ref(`campus/students/${this.state.signInUserUID}`).on('value', snap => {
+                    // console.log(snap.val().displayName);
+                    let val = snap.val();
+                    signInType = val.signInType;
+                    displayName = val.displayName;
+                    // console.log(displayName, ':display name');            
+                    this.setState({ signInType, displayName });
+                });
             };
-        firebase.database().ref(`campus/students/${this.state.signInUserUID}`).on('value', snap => {
-        //   console.log(snap.val().displayName);
-            let val = snap.val();
-            signInType = val.signInType;
-            displayName = val.displayName;
-            this.setState({ signInType, displayName });
-        })
         });
     };
     render(){
         return(
             <div>
                 <AppBar title='My App' onLeftIconButtonClick={() => this.toggleDrawer()}/>
-                <Drawer open={this.state.open} onToggleDrawer={this.toggleDrawer.bind(this)}>
-                    <span className='closeTag' style={{fontSize: '40px', color: 'red', cursor: 'pointer', float: 'right', marginRight: '20px'}} onClick={() => this.toggleDrawer()}>&times;</span>
-                    <RaisedButton onClick={this.logout} style={{marginTop: '10px', marginLeft: '5px'}} label="Logout" primary={true} />
-                    <Link to="/home"><MenuItem>SignIn type: { this.state.signInType }</MenuItem></Link>
-                    <Link to="/"><MenuItem>User: { this.state.displayName }</MenuItem></Link>
+                <Drawer style={{background: 'red'}} open={this.state.open} onToggleDrawer={this.toggleDrawer.bind(this)}>
+                    <span className='closeTag' style={{fontSize: '40px', color: 'red', cursor: 'pointer', float: 'right'}} onClick={() => this.toggleDrawer()}>&times;</span>
+                    <RaisedButton onClick={this.logout} style={{width: '80%', marginTop: '10px'}} label="Logout" primary={true} />
+                    <MenuItem>SignIn type: { this.state.signInType }</MenuItem>
+                    <MenuItem>User: { this.state.displayName }</MenuItem>
                 </Drawer>
                 <div>
                     <Tabs
@@ -80,11 +84,10 @@ class Home extends Component {
                     onChangeIndex={this.handleChange}
                     >
                     <div>
-                        <h2 style={styles.headline}>Post New Job</h2>
-                        <PostJob />
+                        <PostJob email={this.state.email} signInType={this.state.signInType} displayName={this.state.displayName} signInUserUID={this.state.signInUserUID} />
                     </div>
                     <div style={styles.slide}>
-                        slide n°2
+                        <Jobs UID={this.state.signInUserUID} />
                     </div>
                     <div style={styles.slide}>
                         <StudentsList />
@@ -108,4 +111,4 @@ const styles = {
     },
 };
 
-export default Home;
+export default CompanyHome;
