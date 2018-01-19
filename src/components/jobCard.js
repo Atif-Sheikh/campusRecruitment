@@ -32,28 +32,32 @@ class JobCard extends Component{
     applyButton = (key) => {
         const { studentDetails } = this.props;
         let data = [];
-        // console.log('e:r' ,key);
         // console.log(studentDetails);
-        let uid = firebase.auth().currentUser.uid
-        firebase.database().ref(`campus/jobs/${key}/applicants/${uid}`).on('value', snap => {
-            console.log(snap.val());
-            for(let key in snap.val()){
-                console.log(snap.val());
-                data.push(snap.val()[key]);
+        if(studentDetails[3] && studentDetails[4]){
+            let uid = firebase.auth().currentUser.uid
+            firebase.database().ref(`campus/jobs/${key}/applicants/${uid}`).on('value', snap => {
+                // console.log(snap.val());
+                for(let key in snap.val()){
+                    // console.log(snap.val()[key].qualification);
+                    data.push(snap.val()[key]);
+                };
+            });
+            // console.log(data[1]);
+            // console.log(studentDetails);
+            // console.log(studentDetails[1]);
+            if(data[1] !== studentDetails[1]){
+                // console.log(data.email, 'emails' , studentDetails[0][1])
+            firebase.database().ref(`campus/jobs/${key}/applicants/${uid}`).set({
+                displayName: studentDetails[0], email: studentDetails[1], 
+                qualification: studentDetails[2], signInType: studentDetails[3], skills: studentDetails[4]});
+                alert('You have successFully apply!');
+            }else{
+                alert('you have already applied!');
             };
-        });
-        // console.log(data[1]);
-        // console.log(studentDetails);
-        // console.log(studentDetails[1]);
-        if(data[1] !== studentDetails[1]){
-            // console.log(data.email, 'emails' , studentDetails[0][1])
-        firebase.database().ref(`campus/jobs/${key}/applicants/${uid}`).set({
-            displayName: studentDetails[0], email: studentDetails[1], 
-            qualification: studentDetails[2], signInType: studentDetails[3], skills: studentDetails[4]});
-            alert('You have successFully apply!');
-        }else{
-            alert('you have already applied!');
-        };
+        }
+        else{
+            alert('please update your profile!');
+        }
     };
     deleteButton = (key) => {
         // console.log(key);
@@ -127,7 +131,7 @@ class JobCard extends Component{
         }
     };
     render(){
-        console.log(this.state.applicants);
+        // console.log(this.props.studentDetails[0]);
         // console.log(this.props.indexKey[this.props.index], 'key', this.props.index, 'index');
         // console.log(this.state.studentDetails);
         const actions = [

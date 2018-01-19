@@ -40,7 +40,7 @@ class StudentInfo extends Component {
         let UID = this.props.signInUserUID;
         let signInType = this.props.signInType;        
         const { displayName, skills, qualification, email } = this.state;
-        if(displayName !== '' && skills !== '' && qualification !== ''){
+        if(displayName && skills && qualification){
             firebase.database().ref(`campus/students/${UID}`).set({displayName, email, skills, qualification, signInType});
             this.setState({
                 isEdit: !this.state.isEdit,

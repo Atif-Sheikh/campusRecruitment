@@ -47,7 +47,7 @@ class AllJobs extends Component{
         });
     };
     render(){
-        console.log(this.props.adminType)
+        // console.log(this.props.adminType)
         return(
             <div>
                 <h1 style={styles.headline}>Jobs List</h1>
