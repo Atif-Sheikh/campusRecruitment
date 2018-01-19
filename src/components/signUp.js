@@ -138,7 +138,7 @@ const styles = {
     background: {
     backgroundImage: `url(${image})`,
     backgroundSize: 'cover',
-    height: '1000px',
+    height: '690px',
   },
 };
 
