@@ -54,7 +54,7 @@ class CompanyHome extends Component {
                     let val = snap.val();
                     signInType = val.signInType;
                     displayName = val.displayName;
-                    // console.log(displayName, ':display name');            
+                    // console.log(signInType, ':display name');            
                     this.setState({ signInType, displayName });
                 });
             };
@@ -87,7 +87,7 @@ class CompanyHome extends Component {
                         <PostJob email={this.state.email} signInType={this.state.signInType} displayName={this.state.displayName} signInUserUID={this.state.signInUserUID} />
                     </div>
                     <div style={styles.slide}>
-                        <Jobs UID={this.state.signInUserUID} />
+                        <Jobs signInType={this.state.signInType} UID={this.state.signInUserUID} />
                     </div>
                     <div style={styles.slide}>
                         <StudentsList />

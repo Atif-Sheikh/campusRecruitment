@@ -20,7 +20,7 @@ class Jobs extends Component{
                 let jobs = [];
                 let jobKeys = [];
                 let data = snap.val();
-                // console.log(data);
+                // console.log(this.props.signInType);
                 for(let keys in data){
                     // console.log(user.uid, ':::', data[keys].UID)
                     if(data[keys].UID === user.uid){
@@ -41,7 +41,7 @@ class Jobs extends Component{
                 <Paper style={styles.paper} zDepth={2}>
                     {
                         // this.state.jobs.map((job, index) => {
-                            <JobCard job={this.state.jobs} jobKeys={this.state.jobKeys} />
+                            <JobCard signInType={this.props.signInType} job={this.state.jobs} jobKeys={this.state.jobKeys} />
                         // })
                     }
                 </Paper>

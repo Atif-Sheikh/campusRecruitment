@@ -47,6 +47,7 @@ class AllJobs extends Component{
         });
     };
     render(){
+        console.log(this.props.adminType)
         return(
             <div>
                 <h1 style={styles.headline}>Jobs List</h1>
@@ -55,7 +56,7 @@ class AllJobs extends Component{
                         // this.state.jobs.map((job, index) => {
                         //     return (<JobCard key={index} indexKey={Object.keys(job[index])} signInType={this.state.signInType} job={Object.values(job[index])} index={index} />)
                         // })
-                        <JobCard studentDetails={this.state.studentDetails} signInType={this.state.signInType} job={this.state.jobs} jobkeys={this.state.jobkey} />
+                        <JobCard adminType={this.props.adminType} studentDetails={this.state.studentDetails} signInType={this.state.signInType} job={this.state.jobs} jobkeys={this.state.jobkey} />
                     }
                 </Paper>
             </div>

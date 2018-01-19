@@ -17,6 +17,7 @@ class SignIn extends Component {
       password: '',
       error: '',
       loading: false,
+      UID: '',
     };
   };
   onChangeEmail(evt){
@@ -38,6 +39,9 @@ class SignIn extends Component {
           this.setState({loading: false});
           if(snap.val().signInType === 'Student'){
             this.props.history.push('./home');
+          }
+          else if(snap.val().signInType === 'admin'){
+            this.props.history.push('./admin');
           }else{
             this.props.history.push('./companyHome');
           };
@@ -60,13 +64,21 @@ class SignIn extends Component {
       loading: true,
     });
     firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(() => {
+    .then((user) => {
       this.setState({
         email: '',
         password: '',
         error: '',
         loading: false,
+        UID: user.uid,
       });
+      // firebase.database().ref(`campus/students/${user.uid}`).on('value', snap => {
+      //   let data = snap.val();
+      //   console.log(data.signInType);
+      //   if(data.signInType === 'admin'){
+      //     this.props.history.push('/admin')
+      //   }else{}
+      // });
       this.renderHome();
     })
       .catch((e) => {

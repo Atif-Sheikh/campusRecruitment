@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 // import { List, ListItem } from 'material-ui/List';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn, } from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton';
 import * as firebase from 'firebase';
 
 class StudentsList extends Component {
@@ -8,15 +9,30 @@ class StudentsList extends Component {
         super();
         this.state = {
             students: [],
+            keys: [],
         };
+    };
+    deleteStudent = (key) => {
+        console.log(key);
+        firebase.database().ref(`campus/students/${key}`).remove();
     };
     componentDidMount(){
         firebase.database().ref(`campus/students`).on('value', snap => {
-            let value = Object.values(snap.val());
+            let keys = [];
+            let students = [];
+            // let value = Object.values(snap.val());
             // console.log(value, ':values');
-            let filt = value.filter((val) => val.signInType === 'Student');
+            // let filt = value.filter((val) => val.signInType === 'Student');
+            for(let key in snap.val()){
+                if(snap.val()[key].signInType === 'Student'){
+                    // console.log(key);
+                    keys.push(key);
+                    students.push(snap.val()[key]);
+                }
+            }
             this.setState({
-                students: filt,
+                students,
+                keys,
             });
         });
     };
@@ -25,15 +41,19 @@ class StudentsList extends Component {
             <div>
                 <h2>StudentsList</h2>
                 <Table>
-                <TableHeader>
+                <TableHeader displaySelectAll={false}>
                     <TableRow>
                         <TableHeaderColumn  style={{fontSize: '30px'}}>Name</TableHeaderColumn>
                         <TableHeaderColumn  style={{fontSize: '30px'}}>Email</TableHeaderColumn>
                         <TableHeaderColumn  style={{fontSize: '30px'}}>Qualification</TableHeaderColumn>
-                        <TableHeaderColumn  style={{fontSize: '30px'}}>Skills</TableHeaderColumn>                        
+                        <TableHeaderColumn  style={{fontSize: '30px'}}>Skills</TableHeaderColumn>
+                        {
+                            this.props.signInType === 'admin' ? <TableHeaderColumn  style={{fontSize: '30px'}}>Delete</TableHeaderColumn>
+                            : ''
+                        }                        
                     </TableRow>
                 </TableHeader>
-                <TableBody>        
+                <TableBody displayRowCheckbox={false}>        
                     {
                         this.state.students.map((student, index) => {
                             // return <ListItem key={index} 
@@ -41,11 +61,14 @@ class StudentsList extends Component {
                             //     style={{fontSize: '20px', float: 'left', marginLeft: '100px', marginTop: '20px'}} 
                             //     hoverColor='darkCyan'
                             // />
-                        return<TableRow key={index}>
+                        return<TableRow key={index.toString()}>
                             <TableRowColumn  style={{fontSize: '20px'}}>{student.displayName}</TableRowColumn>
                             <TableRowColumn style={{fontSize: '20px'}}>{student.email}</TableRowColumn>
                             <TableRowColumn style={{fontSize: '20px'}}>{student.qualification}</TableRowColumn>
-                            <TableRowColumn style={{fontSize: '20px'}}>{student.skills}</TableRowColumn>                            
+                            <TableRowColumn style={{fontSize: '20px'}}>{student.skills}</TableRowColumn>
+                            {
+                                this.props.signInType === 'admin' ? <TableRowColumn style={{fontSize: '20px'}}>{<FlatButton style={{color: 'red'}} onClick={(e)=>{e.preventDefault(); this.deleteStudent(this.state.keys[index])}} label="Delete" />}</TableRowColumn> : ''
+                            }                            
                         </TableRow>    
                         })
                     }

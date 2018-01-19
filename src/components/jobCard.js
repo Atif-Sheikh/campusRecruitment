@@ -1,29 +1,34 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import {List, ListItem} from 'material-ui/List'; 
-import RaisedButton from 'material-ui/RaisedButton';             
+import RaisedButton from 'material-ui/RaisedButton';    
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';        
 import * as firebase from 'firebase';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
 class JobCard extends Component{
     constructor(props){
-        super(props);
-        this.state = {
-            // jobTitle: '',
-            // jobType: '',
-            // requiredExperience: '',
-            // qualification: '',
-            // salary: '',
-            // signInType: '',
-            // UID: '',
-            // skills: '',
-            // displayName: '',
-            // email: '',
-            studentDetails: [],
-            studentType: '',
-            jobs:  [],
-            label: 'Apply For Job',
-        };
+    super(props);
+    this.state = {
+        // jobTitle: '',
+        // jobType: '',
+        // requiredExperience: '',
+        // qualification: '',
+        // salary: '',
+        // signInType: '',
+        // UID: '',
+        // skills: '',
+        // displayName: '',
+        // email: '',
+        studentDetails: [],
+        studentType: '',
+        open: false,
+        jobs:  [],
+        applicants: [],
+        label: 'Apply For Job',
     };
+};
     applyButton = (key) => {
         const { studentDetails } = this.props;
         let data = [];
@@ -54,6 +59,36 @@ class JobCard extends Component{
         // console.log(key);
         firebase.database().ref(`campus/jobs/${key}`).remove();
     };
+    handleClick = (jobKey) => {
+        // This prevents ghost click.
+        // event.preventDefault();
+        // console.log(jobKey);
+        let applicants = [];
+        firebase.database().ref(`campus/jobs/${jobKey}/applicants`).on('value', snap => {
+            // console.log(Object.values(snap.val()));
+            if(snap.val()){
+                applicants = Object.values(snap.val());
+                console.log(applicants);
+                this.setState({
+                    open: true,
+                    applicants,
+                })
+            }else{
+                alert('No applicant Found!!!');
+                this.setState({open: false});
+            };
+        });
+        //     this.setState({
+        //     open: true,
+        //     applicants,
+        // });
+    };
+    
+    handleRequestClose = () => {
+        this.setState({
+          open: false,
+        });
+    };    
     // componentWillReceiveProps(props){
     //     let jobs = Object.values(props.job);
     //     let studentType = props.signInType;
@@ -74,10 +109,34 @@ class JobCard extends Component{
     //         });
     //     });
     // };
+    renderCard = (index) => {
+        if(this.props.signInType === 'Student'){
+            return <RaisedButton onClick={(e)=> {e.preventDefault();this.applyButton(this.props.jobkeys[index])}} label={this.state.label} primary={true} />
+        }else if(this.props.adminType === 'admin'){
+            return <section>
+                <RaisedButton style={{marginBottom: '2px'}} label='View applicants!' primary={true} onClick={(e)=>{e.preventDefault(); this.handleClick(this.props.jobkeys[index])}} />
+                    <br />
+                <RaisedButton style={{width: '100%', marginBottom: '10px'}} backgroundColor='#03A9F4' primary={true} onClick={(e)=> {this.deleteButton(this.props.jobkeys[index])}} label='Delete Job' />            
+            </section>
+        }else if(this.props.signInType === 'Company'){
+            return <section>
+                <RaisedButton style={{marginBottom: '2px'}} label='View applicants!' primary={true} onClick={(e)=>{e.preventDefault(); this.handleClick(this.props.jobKeys[index])}} />
+                    <br />
+                <RaisedButton style={{width: '100%', marginBottom: '10px'}} backgroundColor='#03A9F4' primary={true} onClick={(e)=> {this.deleteButton(this.props.jobKeys[index])}} label='Delete Job' />            
+            </section>
+        }
+    };
     render(){
-        // console.log(this.props.job)
+        console.log(this.state.applicants);
         // console.log(this.props.indexKey[this.props.index], 'key', this.props.index, 'index');
         // console.log(this.state.studentDetails);
+        const actions = [
+            <FlatButton
+              label="Close"
+              primary={true}
+              onClick={this.handleRequestClose}
+            />,
+        ];
         return(
             <div>
                 {
@@ -96,12 +155,68 @@ class JobCard extends Component{
                             <ListItem primaryText={`Salary: $${job.salary}`} />
                                 <br />
                             {
-                                this.props.signInType === 'Student' ? <div>
-                                    <RaisedButton onClick={(e)=> {e.preventDefault();this.applyButton(this.props.jobkeys[index])}} label={this.state.label} primary={true} />
-                                </div> : <div>
-                                <RaisedButton style={{marginBottom: '2px'}} label='View applicants!' primary={true} onClick={()=> alert()} />
-                                    <br />
-                                <RaisedButton style={{width: '100%', marginBottom: '10px'}} backgroundColor='#03A9F4' primary={true} onClick={(e)=> {this.deleteButton(this.props.jobKeys[index])}} label='Delete Job' />
+                                <div>
+                                {this.renderCard([index])}
+                                {/* // this.props.signInType === 'Student' ?  */}
+                                {/* //     <RaisedButton onClick={(e)=> {e.preventDefault();this.applyButton(this.props.jobkeys[index])}} label={this.state.label} primary={true} /> */}
+                                {/* // </div> : <div> */}
+                                {/* // <RaisedButton style={{marginBottom: '2px'}} label='View applicants!' primary={true} onClick={(e)=>{e.preventDefault(); this.handleClick(this.props.jobKeys[index])}} /> */}
+                                {/* <Popover
+                                    open={this.state.open}
+                                    // anchorEl={this.state.anchorEl}
+                                    anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                                    targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                                    onRequestClose={this.handleRequestClose}
+                                    >
+                                    <Menu style={{borderRadius: '5px' ,marginLeft: '10px', width: '200px', maxHeight: '400px', background: '#B3E5FC', overflow: 'scroll'}}>
+                                        {
+                                            this.state.applicants.map((student, index) => {
+                                                return <section key={index.toString()}>
+                                                                <h3>Student Details</h3>
+                                                                <MenuItem>Email:{student.email}</MenuItem>
+                                                                <MenuItem>Qualification:{student.qualification}</MenuItem>
+                                                                <MenuItem>Skills:{student.skills}</MenuItem>
+                                                                <hr />                                                                 
+                                                </section>
+                                            })
+                                        }
+                                    </Menu>
+                                </Popover> */}
+                                    <Dialog
+                                    actions={actions}
+                                    modal={false}
+                                    open={this.state.open}
+                                    onRequestClose={this.handleClose}
+                                    autoScrollBodyContent={true}
+                                    >Applicants
+                                    <Table>
+                                    <TableHeader>    
+                                    <TableRow>
+                                        <TableHeaderColumn style={{fontSize: '30px'}}>Name</TableHeaderColumn>
+                                        <TableHeaderColumn style={{fontSize: '30px'}}>Email</TableHeaderColumn>
+                                        <TableHeaderColumn style={{fontSize: '30px'}}>Qualification</TableHeaderColumn>
+                                        <TableHeaderColumn style={{fontSize: '30px'}}>Skills</TableHeaderColumn>                                        
+                                    </TableRow>
+                                    </TableHeader>
+                                    <TableBody displayRowCheckbox={false}>
+                                    {
+                                        this.state.applicants.map((student, index) => {
+                                            return<TableRow  key={index.toString()}>
+                                                    <TableRowColumn style={{fontSize: '15px'}}>{student.displayName}</TableRowColumn>                                                    
+                                                    <TableRowColumn style={{fontSize: '15px'}}>{student.email}</TableRowColumn>
+                                                    <TableRowColumn style={{fontSize: '15px'}}>{student.qualification}</TableRowColumn>
+                                                    <TableRowColumn style={{fontSize: '15px'}}>{student.skills}</TableRowColumn>                                                                                                        
+                                            </TableRow>
+                                        })
+                                    }
+                                    </TableBody>
+                                    </Table>
+                                    {/* <RadioButtonGroup name="shipSpeed" defaultSelected="not_light">
+                                        {radios}
+                                    </RadioButtonGroup> */}
+                                    </Dialog>
+                                    {/* <br /> */}
+                                {/* <RaisedButton style={{width: '100%', marginBottom: '10px'}} backgroundColor='#03A9F4' primary={true} onClick={(e)=> {this.deleteButton(this.props.jobKeys[index])}} label='Delete Job' /> */}
                                 </div>
                             }                    
                         </List>
