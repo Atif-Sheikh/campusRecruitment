@@ -90,9 +90,9 @@ class StudentInfo extends Component {
                     {
                         this.state.isEdit ? <div><form onSubmit={this.submitForm}><TextField onChange={this.changeName} defaultValue={this.state.displayName} floatingLabelText="Name" />
                         <br />
-                        <TextField onChange={this.changeQualification} hintText="Hint Text" defaultValue={this.state.qualification} floatingLabelText="Qualification" />                    
+                        <TextField onChange={this.changeQualification} defaultValue={this.state.qualification} floatingLabelText="Qualification" />                    
                             <br />
-                        <TextField onChange={this.changeSkills} hintText="Hint Text" defaultValue={this.state.skills} floatingLabelText="Skills" />                    
+                        <TextField onChange={this.changeSkills} defaultValue={this.state.skills} floatingLabelText="Skills" />                    
                             <br />
                         <RaisedButton type='submit' label="Update Details" style={{margin: '5px'}} primary={true} />
                         <RaisedButton onClick={this.onToggle} label="Cancel" style={{margin: '5px'}} primary={true}/>

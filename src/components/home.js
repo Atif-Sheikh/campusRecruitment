@@ -48,15 +48,15 @@ class Home extends Component {
         firebase.auth().onAuthStateChanged((user) => {
             if(user){
                 // console.log(user.uid);
+                firebase.database().ref(`campus/students/${user.uid}`).on('value', snap => {
+                    //   console.log(snap.val().displayName);
+                    let val = snap.val();
+                    signInType = val['signInType'];
+                    displayName = val['displayName'];
+                    this.setState({ signInType, displayName });
+                })
                 this.setState({signInUserUID: user.uid});
             };
-        firebase.database().ref(`campus/students/${this.state.signInUserUID}`).on('value', snap => {
-        //   console.log(snap.val().displayName);
-            let val = snap.val();
-            signInType = val.signInType;
-            displayName = val.displayName;
-            this.setState({ signInType, displayName });
-        })
         });
     };
     render(){

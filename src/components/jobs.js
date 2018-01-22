@@ -17,9 +17,9 @@ class Jobs extends Component{
             // let uids = user.uid;
             // this.setState({uids : uids})
             firebase.database().ref(`campus/jobs/`).on('value', snap => {
+                let data = snap.val();
                 let jobs = [];
                 let jobKeys = [];
-                let data = snap.val();
                 // console.log(this.props.signInType);
                 for(let keys in data){
                     // console.log(user.uid, ':::', data[keys].UID)

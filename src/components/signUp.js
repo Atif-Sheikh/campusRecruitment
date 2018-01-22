@@ -93,7 +93,7 @@ class SignupForm extends Component{
             <Paper zDepth={3} rounded={true}></Paper>
             <h1>Signup</h1>
             <div style={{display: 'inline'}}>
-            <span style={{position: 'relative', right: '15px', fontWeight: 'bold', fontSize: '20px' }}>SignUp type:</span>
+            <span style={{position: 'relative', right: '15px', fontWeight: 'bold', fontSize: '20px' }}>Account type:</span>
             <DropDownMenu style={{position:"relative", top: '20px'}}value={this.state.signInType} onChange={this.handleChange}>
               <MenuItem value='Student' label="Student" primaryText="Student" />
               <MenuItem value='Company' label="Company" primaryText="Company" />

@@ -24,7 +24,7 @@ class StudentsList extends Component {
             // console.log(value, ':values');
             // let filt = value.filter((val) => val.signInType === 'Student');
             for(let key in snap.val()){
-                if(snap.val()[key].signInType === 'Student'){
+                if(snap.val()[key]['signInType'] === 'Student'){
                     // console.log(key);
                     keys.push(key);
                     students.push(snap.val()[key]);

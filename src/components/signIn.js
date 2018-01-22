@@ -28,23 +28,24 @@ class SignIn extends Component {
     });
   };
   renderHome = () => {
-    let userUID = '';
+    // let userUID = '';
     this.setState({loading: true});
     firebase.auth().onAuthStateChanged((user) => {
       if(user){
         // console.log(user);
-        userUID = user.uid;
-        firebase.database().ref(`campus/students/${userUID}`).on('value', (snap) => {
-          // console.log(snap.val().signInType);
+        // userUID = user.uid;
+        firebase.database().ref(`campus/students/${user.uid}`).on('value', (snap) => {
+          // console.log(user.uid);
+          if(snap.val()){let data = snap.val();
           this.setState({loading: false});
-          if(snap.val().signInType === 'Student'){
+          if(data.signInType === 'Student'){
             this.props.history.push('./home');
           }
-          else if(snap.val().signInType === 'admin'){
+          else if(data.signInType === 'admin'){
             this.props.history.push('./admin');
           }else{
             this.props.history.push('./companyHome');
-          };
+          };}
         });
       }
     });
@@ -65,12 +66,29 @@ class SignIn extends Component {
     });
     firebase.auth().signInWithEmailAndPassword(email, password)
     .then((user) => {
+      // let result = '';
+      firebase.database().ref(`campus/students/${user.uid}`).on('value', snap => {
+        console.log(snap.val());
+        // for(let key in snap.val()){
+          if(snap.val() === null){
+            // if(result){
+              let user = firebase.auth().currentUser;
+              user.delete().then(()=>{
+              this.setState({error: 'account deleted!'});
+            })
+            }
+            else{
+              this.renderHome();
+            // }
+            // console.log(key, 'key');
+            // result = snap.val()[key];
+          // result = snap.val()['email'];
+        }
+      })
       this.setState({
-        email: '',
-        password: '',
         error: '',
         loading: false,
-        UID: user.uid,
+        // UID: user.uid,
       });
       // firebase.database().ref(`campus/students/${user.uid}`).on('value', snap => {
       //   let data = snap.val();
@@ -79,16 +97,14 @@ class SignIn extends Component {
       //     this.props.history.push('/admin')
       //   }else{}
       // });
-      this.renderHome();
     })
       .catch((e) => {
         this.setState({
-          email: '', 
-          password: '', 
           error: e.message, 
           loading: false,
         });
       });
+      console.log(email, password);
   };
   render(){    
     return(
