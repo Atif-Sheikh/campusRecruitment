@@ -60,7 +60,7 @@ class SignupForm extends Component{
     if(displayName !== '' || email !== '' || password !=='' ){
       firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((e) => {
-          console.log('then', e.uid);
+          // console.log('then', e.uid);
           firebase.database().ref(`campus/students/${e.uid}`).set({
             displayName ,email , signInType, 
           })

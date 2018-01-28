@@ -32,7 +32,8 @@ class AdminHome extends Component{
     };    
     componentDidMount(){
         firebase.auth().onAuthStateChanged((user) => {
-            firebase.database().ref(`campus/students/${user.uid}`).on('value', snap => {
+            let UID = user.uid;
+            firebase.database().ref(`campus/students/${UID}`).on('value', snap => {
                 // console.log(snap.val().email);
                 this.setState({displayName: snap.val()['displayName'], email: snap.val()['email'], signInType: snap.val()['signInType']});
             })
